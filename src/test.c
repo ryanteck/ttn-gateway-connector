@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 
   // Connect to the test broker. The secret key is NULL for simplicity
   printf("connecting...\n");
-  int err = ttngwc_connect(ttn, "localhost", 1883, NULL);
+  int err = ttngwc_connect(ttn, "23.97.152.238", 1883, NULL);
   if (err != 0) {
     printf("connect failed: %d\n", err);
     ttngwc_cleanup(ttn);
@@ -81,7 +81,8 @@ int main(int argc, char **argv) {
       printf("status: sent with time %d\n", i);
 
     // Enter the payload
-    unsigned char buf[] = {0x1, 0x2, 0x3, 0x4, 0x5};
+    //unsigned char buf[] = {0x1, 0x2, 0x3, 0x4, 0x5};
+    unsigned char buf[] = { 0x40, 0xe5, 0x17, 0x01, 0x26, 0x00, 0x05, 0x00, 0x01, 0x03, 0x62, 0x60,0x98, 0xe2, 0x57, 0x1d, 0x3d, 0x23, 0xc5, 0x6f, 0xca, 0xee, 0xa8, 0xe2 };
     Router__UplinkMessage up = ROUTER__UPLINK_MESSAGE__INIT;
     up.has_payload = 1;
     up.payload.len = sizeof(buf);
@@ -107,7 +108,7 @@ int main(int argc, char **argv) {
     gateway.has_rf_chain = 1;
     gateway.rf_chain = 5;
     gateway.has_frequency = 1;
-    gateway.frequency = 86800;
+    gateway.frequency = 868000000;
     up.gateway_metadata = &gateway;
 
     // Send uplink message
@@ -117,7 +118,7 @@ int main(int argc, char **argv) {
     else
       printf("up: sent with timestamp %d\n", i);
 
-    sleep(rand() % 10);
+    sleep(rand() % 20);
   }
 
   printf("disconnecting\n");

@@ -35,11 +35,18 @@ void ttngwc_cleanup(TTN *s) {
 void ttngwc_downlink_cb(struct MessageData *data, void *s) {
   struct Session *session = (struct Session *)s;
 
+printf("Downlink received\n");
+printf("Packet @%ld, length: %d\n",data->message->payload, data->message->payloadlen);
   Router__DownlinkMessage *downlink = router__downlink_message__unpack(
       NULL, data->message->payloadlen, data->message->payload);
+printf("downlink %ld\n",downlink);
   if (!downlink)
+{
+printf("Downlink invalid???\n");
     return;
+}
 
+printf("Calling handler %ld\n",session->downlink_handler);
   if (session->downlink_handler)
     session->downlink_handler(downlink, session->cb_arg);
 
@@ -103,6 +110,7 @@ int ttngwc_connect(TTN *s, const char *host_name, int port, const char *key) {
   asprintf(&downlink_topic, "%s/down", session->id);
   err = MQTTSubscribe(&session->client, downlink_topic, QOS_DOWN,
                       &ttngwc_downlink_cb, session);
+printf("subscribe: >%s<\n",downlink_topic);
 
 exit:
   if (err != SUCCESS && downlink_topic != NULL)
