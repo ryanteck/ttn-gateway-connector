@@ -5,9 +5,11 @@ OBJDIR = obj
 BINDIR = bin
 APIDIR = $(SRCDIR)/github.com/TheThingsNetwork/ttn/api
 
-CFLAGS = -fPIC -Wall -g -O2 -I$(SRCDIR) -I$(PAHO_SRC)/MQTTClient-C/src -I$(PAHO_SRC)/MQTTPacket/src -I$(SRCDIR)/github.com/gogo/protobuf/protobuf -I$(SRCDIR)/github.com/TheThingsNetwork -DMQTT_TASK $(shell pkg-config --cflags 'libprotobuf-c >= 1.0.0')
+CFLAGS = -fPIC -Wall -g -O2 -I$(SRCDIR) -I$(PAHO_SRC)/MQTTClient-C/src -I$(PAHO_SRC)/MQTTPacket/src -I$(SRCDIR)/github.com/gogo/protobuf/protobuf -I$(SRCDIR)/github.com/TheThingsNetwork -I$(PROTO_SRC) -DMQTT_TASK
+#CFLAGS = -fPIC -Wall -g -O2 -I$(SRCDIR) -I$(PAHO_SRC)/MQTTClient-C/src -I$(PAHO_SRC)/MQTTPacket/src -I$(SRCDIR)/github.com/gogo/protobuf/protobuf -I$(SRCDIR)/github.com/TheThingsNetwork -DMQTT_TASK $(shell pkg-config --cflags 'libprotobuf-c >= 1.0.0')
 LDFLAGS =
-LDADD = -lpthread -lpaho-embed-mqtt3c $(shell pkg-config --libs 'libprotobuf-c >= 1.0.0')
+#LDADD = -L$(PAHO_SRC)/build/output -lpthread -lpaho-embed-mqtt3c $(shell pkg-config --libs 'libprotobuf-c >= 1.0.0')
+LDADD = -L$(PAHO_SRC)/build/output -lpthread -lpaho-embed-mqtt3c -L$(PROTO_SRC)//protobuf-c
 RM = rm -f
 NAME = ttn-gateway-connector
 TARGET_LIB = lib$(NAME).so
