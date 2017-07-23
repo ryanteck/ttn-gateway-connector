@@ -44,5 +44,5 @@ int ttngwc_send_status(TTN *session, Gateway__Status *status);
 
 // Get the RTT
 // Returns RTT in milliseconds
-long ttngwc_getrtt(void *s) {
+long ttngwc_getrtt(void *s);
 #endif
