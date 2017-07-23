@@ -35,6 +35,11 @@ void ttngwc_cleanup(TTN *s) {
   free(session);
 }
 
+long ttngwc_getrtt(void *s) {
+  struct Session *session = (struct Session *)s;
+  return MQTTGetPingTime(&session->client) / 1000;
+}
+
 void ttngwc_downlink_cb(struct MessageData *data, void *s) {
   struct Session *session = (struct Session *)s;
 
