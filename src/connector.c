@@ -37,6 +37,11 @@ void ttngwc_cleanup(TTN *s) {
   free(session);
 }
 
+int ttngwc_sendping(void *s) {
+  struct Session *session = (struct Session *)s;
+  return MQTTSendPing(&session->client);
+}
+
 long ttngwc_getrtt(void *s) {
   struct Session *session = (struct Session *)s;
   return MQTTGetPingTime(&session->client) / 1000;

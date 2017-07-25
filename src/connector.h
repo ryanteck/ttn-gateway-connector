@@ -42,6 +42,10 @@ int ttngwc_send_uplink(TTN *session, Router__UplinkMessage *uplink);
 // Returns 0 on success, -1 on failure or -2 on timeout
 int ttngwc_send_status(TTN *session, Gateway__Status *status);
 
+// Send ping request
+// Returns 0 on success, -1 on failure or -2 on timeout
+int ttngwc_sendping(void *s);
+
 // Get the RTT
 // Returns RTT in milliseconds
 long ttngwc_getrtt(void *s);
