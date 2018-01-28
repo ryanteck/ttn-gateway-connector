@@ -169,10 +169,14 @@ int ttngwc_disconnect(TTN *s) {
     session->downlink_topic = NULL;
   }
 
-
   return 0;
 }
 
+int ttngwc_checkconnected(TTN *s) {
+  struct Session *session = (struct Session *)s;
+  return NetworkCheckConnected(&session->network);
+}
+  
 int ttngwc_send_uplink(TTN *s, Router__UplinkMessage *uplink) {
   struct Session *session = (struct Session *)s;
 

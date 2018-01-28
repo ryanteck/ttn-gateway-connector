@@ -49,4 +49,8 @@ int ttngwc_sendping(void *s);
 // Get the RTT
 // Returns RTT in milliseconds
 long ttngwc_getrtt(void *s);
+
+// Check connection is life
+// Returns 0 if not connected, 1 if connected
+int ttngwc_checkconnected(TTN *session);
 #endif
