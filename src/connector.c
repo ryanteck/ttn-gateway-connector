@@ -70,8 +70,10 @@ int ttngwc_connect(TTN *s, const char *host_name, int port, const char *key) {
   MQTTPacket_connectData connect = MQTTPacket_connectData_initializer;
 
   err = NetworkConnect(&session->network, (char *)host_name, port);
-  if (err != SUCCESS)
+  if (err != SUCCESS) {
+debug_log("ttngwc_connect: NetworkConnect failed %d",err);
     goto exit;
+  }
 
   connect.clientID.cstring = session->id;
   connect.keepAliveInterval = KEEP_ALIVE_INTERVAL;
@@ -101,8 +103,10 @@ int ttngwc_connect(TTN *s, const char *host_name, int port, const char *key) {
 #if SEND_DISCONNECT_WILL
   free(connect.will.message.lenstring.data);
 #endif
-  if (err != SUCCESS)
+  if (err != SUCCESS) {
+debug_log("ttngwc_connect: MQTTConnect failed: %d",err);
     goto exit;
+  }
 
 #if SEND_CONNECT
   Types__ConnectMessage conn = TYPES__CONNECT_MESSAGE__INIT;
@@ -122,6 +126,8 @@ int ttngwc_connect(TTN *s, const char *host_name, int port, const char *key) {
   asprintf(&session->downlink_topic, "%s/down", session->id);
   err = MQTTSubscribe(&session->client, session->downlink_topic, QOS_DOWN,
                       &ttngwc_downlink_cb, session);
+
+debug_log("ttngwc_connect: MQTTSubscribe result %d",err);
 
 exit:
   if (err != SUCCESS) {
@@ -152,12 +158,17 @@ int ttngwc_disconnect(TTN *s) {
   message.payloadlen = types__disconnect_message__get_packed_size(&will);
   message.payload = malloc(message.payloadlen);
   types__disconnect_message__pack(&will, (uint8_t *)message.payload);
+debug_log("ttngwc_disconnect: before MQTTPublish");
   MQTTPublish(&session->client, "disconnect", &message);
+debug_log("ttngwc_disconnect: after MQTTPublish");
   free(message.payload);
 #endif
 
+debug_log("ttngwc_disconnect: before MQTTDisconnect");
   MQTTDisconnect(&session->client);
+debug_log("ttngwc_disconnect: before NetworkDisconnect");
   NetworkDisconnect(&session->network);
+debug_log("ttngwc_disconnect: after NetworkDisconnect");
 
   if(session->key != NULL) {
     free(session->key);

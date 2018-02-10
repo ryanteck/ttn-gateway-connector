@@ -4,6 +4,8 @@
 #if !defined(__TTN_GW_H_)
 #define __TTN_GW_H_
 
+#define debug_log(fmt, ...) _debug_log(fmt"\n", ##__VA_ARGS__)
+
 #if defined(__linux__)
 #include <stdint.h>
 #endif
